@@ -1,21 +1,50 @@
 // [Template no Kotlin Playground](https://pl.kotl.in/WcteahpyN)
 
-enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL }
+data class Formation(
+    val name: String,
+    val level: Level,
+    val content: List<EdContent>,
+    val students: List<Student> = emptyList()
+)
 
-class Usuario
 
-data class ConteudoEducacional(var nome: String, val duracao: Int = 60)
+enum class Level { BEGINER, INTERMETIATE, ADVANCED }
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+data class EdContent(val name: String, val durationInMinutes: Int = 60)
 
-    val inscritos = mutableListOf<Usuario>()
-    
-    fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+data class Student(val name: String)
+
+
+class EnrollStudentInteractor(private var formation: Formation) {
+    fun addStudent(student: Student) {
+        formation = formation.copy(
+            students = formation.students + student
+        )
     }
+
+    fun getStudents() = formation.students
+
+    fun getFormationStatus() = "formatioin status -> \n $formation"
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+    val enrollStudentsInteractor = EnrollStudentInteractor(
+        Formation(
+            name = "Kotlin",
+            level = Level.INTERMETIATE,
+            content = listOf(
+                EdContent("Dependency Injection", 30)
+            )
+        )
+    )
+
+
+
+    (1..10).forEach {
+        enrollStudentsInteractor.addStudent(Student("student $it"))
+    }
+
+    println(enrollStudentsInteractor.getStudents())
+    println(enrollStudentsInteractor.getFormationStatus())
+
 }
